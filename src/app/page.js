@@ -1,8 +1,16 @@
-export default function Home() {
-  return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>Time Tracker App</h1>
-      <p>Main page is working! Next step: load the time tracking component.</p>
+'use client';
+
+import dynamic from 'next/dynamic'
+
+const TimeTrackingApp = dynamic(() => import('../components/TimeTrackingApp'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
     </div>
-  );
+  )
+})
+
+export default function Home() {
+  return <TimeTrackingApp />;
 }
