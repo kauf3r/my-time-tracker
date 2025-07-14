@@ -44,13 +44,13 @@ src/
 - ✅ Time entry form with all fields
 - ✅ Automatic hours calculation
 - ✅ Form validation
-- ✅ Local state management (data lost on refresh)
+- ✅ Airtable integration for data persistence
+- ✅ Past entries viewing
 - ✅ Responsive design
 - ✅ Success notifications
 
 ## Planned Features (What We're Building)
-- 🔄 Airtable integration for data persistence
-- 🔄 Past entries viewing/editing
+- 🔄 Past entries editing functionality
 - 🔄 Monthly invoice generation
 - 🔄 PDF export functionality
 - 🔄 Email automation to Chris
@@ -68,20 +68,40 @@ npm run lint    # Check for code issues
 ```env
 AIRTABLE_ACCESS_TOKEN=your_token_here
 AIRTABLE_BASE_ID=your_base_id_here
-AIRTABLE_TABLE_NAME=Time Entries
+AIRTABLE_TABLE_NAME=your_table_id_here  # Use table ID (starts with 'tbl') NOT table name
 RESEND_API_KEY=your_email_api_key
 CHRIS_EMAIL=chris@company.com
 ```
 
+**IMPORTANT**: Use Airtable **table ID** (e.g., `tblyWU7ZpduMa4Xl3`) instead of table name for reliable authentication.
+
 ## Airtable Setup
-### Required Fields in "Time Entries" Table:
-- Date (Date field)
-- Time In (Single line text)
-- Time Out (Single line text) 
-- Hours (Number field - calculated in app)
-- Description (Long text)
-- Win of Day (Long text)
-- Tomorrow Plan (Long text)
+
+### How to Get Your Table ID:
+1. Open your Airtable base in browser
+2. Copy the URL: `https://airtable.com/appXXXXXX/tblYYYYYY/viwZZZZZZ`
+3. Extract the table ID: `tblYYYYYY` (starts with `tbl`)
+4. Use this ID in `AIRTABLE_TABLE_NAME` environment variable
+
+### Required Fields in Your Airtable Table:
+- **Date** (Date field)
+- **Time In** (Single line text)
+- **Time Out** (Single line text) 
+- **Hours** (Number field - calculated in app)
+- **Description** (Long text)
+- **Win of Day** (Long text)
+- **Tomorrow Plan** (Long text)
+- **Entry ID** (Single line text - auto-generated)
+- **user_id** (Single line text - defaults to 'andy')
+
+### Airtable Token Setup:
+1. Go to https://airtable.com/create/tokens
+2. Create Personal Access Token with scopes:
+   - ✅ `data.records:read`
+   - ✅ `data.records:write`
+   - ✅ `schema.bases:read`
+3. **Add specific base access** - select your exact base, not just general permissions
+4. Copy token (starts with `pat`) to `AIRTABLE_ACCESS_TOKEN`
 
 ## Business Settings (To Configure)
 - Hourly rate: $XX/hour
@@ -98,22 +118,52 @@ CHRIS_EMAIL=chris@company.com
 - **Async Operations**: Handling data that takes time to load/save
 
 ## Troubleshooting
-- If app won't start: Check if Node.js is installed, run `npm install`
-- If styles look broken: Check if Tailwind CSS is configured properly
-- If data disappears: This is normal until Airtable integration is complete
-- If hours don't calculate: Check that both time in/out are entered
+
+### Common Issues:
+- **App won't start**: Check if Node.js is installed, run `npm install`
+- **Styles look broken**: Check if Tailwind CSS is configured properly
+- **Hours don't calculate**: Check that both time in/out are entered
+
+### Airtable "Failed to Save" / 403 NOT_AUTHORIZED Errors:
+**Symptoms**: "Failed to save please try again" in browser, `AirtableError: NOT_AUTHORIZED (403)` in server logs
+
+**Solutions**:
+1. **Use Table ID Instead of Name**:
+   - ❌ Wrong: `AIRTABLE_TABLE_NAME=Time_Entries` 
+   - ✅ Correct: `AIRTABLE_TABLE_NAME=tblyWU7ZpduMa4Xl3`
+   - Get table ID from URL: `https://airtable.com/appXXX/tblYYY/viwZZZ`
+
+2. **Check Token Permissions**:
+   - Token must have **specific base access** (not just general permissions)
+   - Required scopes: `data.records:read`, `data.records:write`, `schema.bases:read`
+   - Regenerate token at https://airtable.com/create/tokens if needed
+
+3. **Verify Environment Variables**:
+   - Check `.env.local` file exists and has correct values
+   - Restart development server after changing env vars: `npm run dev`
+   - Use `/api/test-airtable` endpoint to test connection
+
+4. **Field Name Matching**:
+   - Airtable fields should use spaces: "Time In", "Time Out", "Date"
+   - Code maps these correctly in `/src/lib/airtable.js`
+
+### Vercel Deployment Issues:
+- Check Vercel Dashboard → Project → Settings → Environment Variables
+- Ensure all env vars are set with correct values (including table ID)
+- Redeploy after updating environment variables
 
 ## Next Steps
-1. Set up Airtable base and get API credentials
-2. Replace local state with Airtable integration
-3. Add past entries viewing
-4. Build invoice generation system
-5. Set up email automation
+1. ✅ Set up Airtable base and get API credentials - COMPLETED
+2. ✅ Replace local state with Airtable integration - COMPLETED
+3. ✅ Add past entries viewing - COMPLETED
+4. 🔄 Build invoice generation system
+5. 🔄 Set up email automation
 
 ## Git Workflow
 - Main branch: `main`
-- Current status: Basic time tracking app complete
-- Next: Airtable integration
+- Current status: App deployed to Vercel, Airtable integration working
+- Deployed URL: https://my-time-tracker-4px4tc1ba-andy-kaufmans-projects.vercel.app/
+- Next: Invoice generation and email automation
 
 ## Notes for Claude
 - User is a beginner programmer

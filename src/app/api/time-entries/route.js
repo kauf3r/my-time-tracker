@@ -24,7 +24,11 @@ export async function POST(request) {
     // Check environment variables
     console.log('Environment check:', {
       hasAccessToken: !!process.env.AIRTABLE_ACCESS_TOKEN,
+      tokenLength: process.env.AIRTABLE_ACCESS_TOKEN?.length,
+      tokenPrefix: process.env.AIRTABLE_ACCESS_TOKEN?.substring(0, 10),
       hasBaseId: !!process.env.AIRTABLE_BASE_ID,
+      baseIdLength: process.env.AIRTABLE_BASE_ID?.length,
+      baseIdPrefix: process.env.AIRTABLE_BASE_ID?.substring(0, 10),
       tableName: process.env.AIRTABLE_TABLE_NAME || 'Time Entries',
       defaultUserId: process.env.DEFAULT_USER_ID || 'andy'
     });

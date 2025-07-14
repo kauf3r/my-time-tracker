@@ -23,13 +23,13 @@ export async function createTimeEntry(entry) {
         fields: {
           'Entry ID': `Entry ${Date.now()}`, // Simple auto-generated ID
           'user_id': DEFAULT_USER_ID,
-          'date': entry.date,
-          'time_in': entry.timeIn,
-          'time_out': entry.timeOut,
-          'hours': parseFloat(entry.hours) || 0,
-          'description': entry.description,
-          'win_of_day': entry.winOfDay || '',
-          'tomorrow_plan': entry.tomorrowPlan || '',
+          'Date': entry.date,
+          'Time In': entry.timeIn,
+          'Time Out': entry.timeOut,
+          'Hours': parseFloat(entry.hours) || 0,
+          'Description': entry.description,
+          'Win of Day': entry.winOfDay || '',
+          'Tomorrow Plan': entry.tomorrowPlan || '',
         },
       },
     ]);
@@ -39,7 +39,13 @@ export async function createTimeEntry(entry) {
       ...record[0].fields,
     };
   } catch (error) {
-    console.error('Error creating time entry:', error);
+    console.error('Detailed Airtable error:', {
+      message: error.message,
+      statusCode: error.statusCode,
+      error: error.error,
+      stack: error.stack,
+      fullError: error
+    });
     throw new Error('Failed to save time entry');
   }
 }
@@ -54,7 +60,7 @@ export async function getTimeEntries(userId = DEFAULT_USER_ID) {
     const records = await table
       .select({
         filterByFormula: `{user_id} = "${userId}"`,
-        sort: [{ field: 'date', direction: 'desc' }],
+        sort: [{ field: 'Date', direction: 'desc' }],
       })
       .all();
 
@@ -62,13 +68,13 @@ export async function getTimeEntries(userId = DEFAULT_USER_ID) {
       id: record.id,
       entryId: record.fields['Entry ID'],
       userId: record.fields['user_id'],
-      date: record.fields['date'],
-      timeIn: record.fields['time_in'],
-      timeOut: record.fields['time_out'],
-      hours: record.fields['hours'],
-      description: record.fields['description'],
-      winOfDay: record.fields['win_of_day'],
-      tomorrowPlan: record.fields['tomorrow_plan'],
+      date: record.fields['Date'],
+      timeIn: record.fields['Time In'],
+      timeOut: record.fields['Time Out'],
+      hours: record.fields['Hours'],
+      description: record.fields['Description'],
+      winOfDay: record.fields['Win of Day'],
+      tomorrowPlan: record.fields['Tomorrow Plan'],
       createdAt: record.fields['created_at'],
       updatedAt: record.fields['updated_at'],
     }));
@@ -90,13 +96,13 @@ export async function updateTimeEntry(recordId, updates) {
       {
         id: recordId,
         fields: {
-          'date': updates.date,
-          'time_in': updates.timeIn,
-          'time_out': updates.timeOut,
-          'hours': parseFloat(updates.hours) || 0,
-          'description': updates.description,
-          'win_of_day': updates.winOfDay || '',
-          'tomorrow_plan': updates.tomorrowPlan || '',
+          'Date': updates.date,
+          'Time In': updates.timeIn,
+          'Time Out': updates.timeOut,
+          'Hours': parseFloat(updates.hours) || 0,
+          'Description': updates.description,
+          'Win of Day': updates.winOfDay || '',
+          'Tomorrow Plan': updates.tomorrowPlan || '',
         },
       },
     ]);
@@ -139,20 +145,20 @@ export async function getTimeEntriesForPeriod(startDate, endDate, userId = DEFAU
       .select({
         filterByFormula: `AND(
           {user_id} = "${userId}",
-          IS_AFTER({date}, "${startDate}"),
-          IS_BEFORE({date}, "${endDate}")
+          IS_AFTER({Date}, "${startDate}"),
+          IS_BEFORE({Date}, "${endDate}")
         )`,
-        sort: [{ field: 'date', direction: 'asc' }],
+        sort: [{ field: 'Date', direction: 'asc' }],
       })
       .all();
 
     return records.map((record) => ({
       id: record.id,
-      date: record.fields['date'],
-      timeIn: record.fields['time_in'],
-      timeOut: record.fields['time_out'],
-      hours: record.fields['hours'],
-      description: record.fields['description'],
+      date: record.fields['Date'],
+      timeIn: record.fields['Time In'],
+      timeOut: record.fields['Time Out'],
+      hours: record.fields['Hours'],
+      description: record.fields['Description'],
     }));
   } catch (error) {
     console.error('Error fetching time entries for period:', error);

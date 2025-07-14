@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Bell, Clock, Trophy, CalendarClock, Loader2 } from 'lucide-react';
+import { Bell, Clock, Trophy, CalendarClock, Loader2, FileText } from 'lucide-react';
+import Link from 'next/link';
 
 const getDefaultDate = () => {
   try {
@@ -118,9 +119,18 @@ const TimeTrackingApp = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <Clock className="w-6 h-6 text-blue-600" />
-          <h1 className="text-2xl font-bold text-gray-800">Time Tracker</h1>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <Clock className="w-6 h-6 text-blue-600" />
+            <h1 className="text-2xl font-bold text-gray-800">Time Tracker</h1>
+          </div>
+          <Link 
+            href="/invoices"
+            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
+          >
+            <FileText className="w-4 h-4" />
+            Generate Invoice
+          </Link>
         </div>
 
         {notification && (
