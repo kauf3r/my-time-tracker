@@ -13,7 +13,11 @@ export async function GET() {
     console.log('Environment check:', {
       hasAccessToken: !!accessToken,
       accessTokenLength: accessToken?.length,
+      tokenPrefix: accessToken?.substring(0, 10) + '...',
+      tokenSuffix: '...' + accessToken?.substring(accessToken.length - 10),
       baseId: baseId,
+      baseIdLength: baseId?.length,
+      baseIdPrefix: baseId?.substring(0, 10),
       tableName: tableName
     });
     
@@ -51,7 +55,12 @@ export async function GET() {
       environment: {
         baseId: baseId,
         tableName: tableName,
-        hasAccessToken: !!accessToken
+        hasAccessToken: !!accessToken,
+        tokenFormat: {
+          length: accessToken?.length,
+          startsWithPat: accessToken?.startsWith('pat'),
+          startsWithKey: accessToken?.startsWith('key')
+        }
       }
     });
     
@@ -68,6 +77,16 @@ export async function GET() {
         message: error.message,
         statusCode: error.statusCode,
         type: error.name
+      },
+      debug: {
+        hasAccessToken: !!accessToken,
+        tokenLength: accessToken?.length,
+        tokenPrefix: accessToken?.substring(0, 10),
+        baseId: baseId,
+        baseIdFormat: {
+          length: baseId?.length,
+          startsWithApp: baseId?.startsWith('app')
+        }
       }
     }, { status: 500 });
   }
