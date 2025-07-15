@@ -163,10 +163,10 @@ const InvoicePDF = ({ monthlyGroups, invoiceData, dateRange, invoiceNumber, busi
       <View style={styles.invoiceInfo}>
         <View style={styles.billTo}>
           <Text style={styles.sectionTitle}>Bill To:</Text>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 4 }}>{businessInfo.bossName}</Text>
+          <Text style={{ fontSize: 12, fontWeight: 'bold', marginBottom: 4 }}>{businessInfo.workName}</Text>
           <Text style={{ fontSize: 10, color: '#374151', lineHeight: 1.4 }}>
-            {businessInfo.bossAddress.split(',')[0]}{'\n'}
-            {businessInfo.bossAddress.split(',').slice(1).join(',').trim()}
+            {businessInfo.workAddress.split(',')[0]}{'\n'}
+            {businessInfo.workAddress.split(',').slice(1).join(',').trim()}
           </Text>
         </View>
         <View style={styles.invoiceDetails}>
@@ -261,8 +261,8 @@ export async function POST(request) {
     const businessInfo = {
       name: process.env.BUSINESS_NAME || 'AK Capital Group LLC',
       email: process.env.BUSINESS_EMAIL || 'andy@andykaufman.net',
-      bossName: process.env.BOSS_NAME || 'AirSpace Integration',
-      bossAddress: process.env.BOSS_ADDRESS || '450 McQuiade Dr, La Selva Beach, CA, 95076'
+      workName: process.env.WORK_NAME || 'AirSpace Integration',
+      workAddress: process.env.WORK_ADDRESS || '450 McQuiade Dr, La Selva Beach, CA, 95076'
     };
     
     // Generate PDF

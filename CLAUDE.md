@@ -69,8 +69,13 @@ npm run lint    # Check for code issues
 AIRTABLE_ACCESS_TOKEN=your_token_here
 AIRTABLE_BASE_ID=your_base_id_here
 AIRTABLE_TABLE_NAME=your_table_id_here  # Use table ID (starts with 'tbl') NOT table name
+HOURLY_RATE=25
+BUSINESS_NAME=Your Business Name
+BUSINESS_EMAIL=your@email.com
+WORK_NAME=Client Company Name
+WORK_ADDRESS=Client Address
+WORK_EMAIL=client@email.com
 RESEND_API_KEY=your_email_api_key
-CHRIS_EMAIL=chris@company.com
 ```
 
 **IMPORTANT**: Use Airtable **table ID** (e.g., `tblyWU7ZpduMa4Xl3`) instead of table name for reliable authentication.
