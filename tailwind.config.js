@@ -16,6 +16,11 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Barlow', 'system-ui', 'sans-serif'],
+        display: ['Barlow Condensed', 'Barlow', 'sans-serif'],
+        mono: ['B612 Mono', 'ui-monospace', 'monospace'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
