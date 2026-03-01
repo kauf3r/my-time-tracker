@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Bell, Clock, Trophy, CalendarClock, Loader2, FileText } from 'lucide-react';
+import { Bell, Clock, Loader2, FileText } from 'lucide-react';
 import Link from 'next/link';
 
 const getDefaultDate = () => {
@@ -17,9 +17,7 @@ const defaultEntry = {
   timeIn: '',
   timeOut: '',
   hours: '',
-  description: '',
-  winOfDay: '',
-  tomorrowPlan: ''
+  description: ''
 };
 
 const TimeTrackingApp = () => {
@@ -61,13 +59,13 @@ const TimeTrackingApp = () => {
 
   const calculateHours = (timeIn, timeOut) => {
     if (!timeIn || !timeOut) return '';
-    
+
     const [inHours, inMinutes] = timeIn.split(':').map(Number);
     const [outHours, outMinutes] = timeOut.split(':').map(Number);
-    
+
     let totalMinutes = (outHours * 60 + outMinutes) - (inHours * 60 + inMinutes);
     if (totalMinutes < 0) totalMinutes += 24 * 60;
-    
+
     return (totalMinutes / 60).toFixed(2);
   };
 
@@ -81,9 +79,9 @@ const TimeTrackingApp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!currentEntry.timeIn || !currentEntry.timeOut || !currentEntry.description) {
-      setNotification('Please fill in all required fields');
+
+    if (!currentEntry.timeIn || !currentEntry.timeOut) {
+      setNotification('Please fill in time in and time out');
       setTimeout(() => setNotification(''), 3000);
       return;
     }
@@ -100,10 +98,9 @@ const TimeTrackingApp = () => {
 
       if (response.ok) {
         const data = await response.json();
-        // Add new entry to the beginning of the list
         setEntries(prev => [data.entry, ...prev]);
         setCurrentEntry({...defaultEntry, date: getDefaultDate()});
-        setNotification('Hours logged successfully!');
+        setNotification('Hours logged!');
       } else {
         throw new Error('Failed to save entry');
       }
@@ -117,19 +114,19 @@ const TimeTrackingApp = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
+    <div className="max-w-2xl mx-auto p-4 space-y-6">
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Clock className="w-6 h-6 text-blue-600" />
             <h1 className="text-2xl font-bold text-gray-800">Time Tracker</h1>
           </div>
-          <Link 
+          <Link
             href="/invoices"
             className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors"
           >
             <FileText className="w-4 h-4" />
-            Generate Invoice
+            Invoice
           </Link>
         </div>
 
@@ -143,7 +140,7 @@ const TimeTrackingApp = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Date
@@ -156,7 +153,7 @@ const TimeTrackingApp = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Time In
@@ -169,7 +166,7 @@ const TimeTrackingApp = () => {
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Time Out
@@ -184,58 +181,22 @@ const TimeTrackingApp = () => {
             </div>
           </div>
 
+          {currentEntry.hours && (
+            <div className="text-center text-lg font-semibold text-blue-600">
+              {currentEntry.hours} hours
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Hours Worked
+              Description <span className="text-gray-400 font-normal">(optional)</span>
             </label>
             <input
               type="text"
-              value={currentEntry.hours}
-              readOnly
-              className="w-full p-2 border border-gray-300 rounded bg-gray-50"
-              placeholder="Calculated automatically"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Description of Work
-            </label>
-            <textarea
               value={currentEntry.description}
               onChange={(e) => handleTimeChange('description', e.target.value)}
-              rows={3}
               className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="What did you work on today?"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              <Trophy className="w-4 h-4 inline mr-1" />
-              Win of the Day
-            </label>
-            <textarea
-              value={currentEntry.winOfDay}
-              onChange={(e) => handleTimeChange('winOfDay', e.target.value)}
-              rows={2}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="What went well today?"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              <CalendarClock className="w-4 h-4 inline mr-1" />
-              Tomorrow&apos;s Plan
-            </label>
-            <textarea
-              value={currentEntry.tomorrowPlan}
-              onChange={(e) => handleTimeChange('tomorrowPlan', e.target.value)}
-              rows={2}
-              className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="What&apos;s the plan for tomorrow?"
+              placeholder="What did you work on?"
             />
           </div>
 
@@ -260,21 +221,18 @@ const TimeTrackingApp = () => {
       ) : entries.length > 0 ? (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-bold text-gray-800 mb-4">Recent Entries</h2>
-          <div className="space-y-3">
+          <div className="space-y-2">
             {entries.map((entry) => (
-              <div key={entry.id} className="border-l-4 border-blue-500 pl-4 py-2">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="font-medium">{entry.date} - {entry.hours} hours</p>
-                    <p className="text-sm text-gray-600">{entry.timeIn} to {entry.timeOut}</p>
-                    <p className="text-gray-700 mt-1">{entry.description}</p>
-                    {entry.winOfDay && (
-                      <p className="text-sm text-green-600 mt-1">
-                        <Trophy className="w-3 h-3 inline mr-1" />
-                        {entry.winOfDay}
-                      </p>
-                    )}
-                  </div>
+              <div key={entry.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0">
+                <div className="flex items-center gap-4">
+                  <span className="font-medium text-gray-800">{entry.date}</span>
+                  <span className="text-sm text-gray-500">{entry.timeIn} - {entry.timeOut}</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  {entry.description && (
+                    <span className="text-sm text-gray-500 max-w-48 truncate">{entry.description}</span>
+                  )}
+                  <span className="font-semibold text-blue-600">{entry.hours}h</span>
                 </div>
               </div>
             ))}

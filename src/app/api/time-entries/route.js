@@ -6,7 +6,7 @@ export async function GET() {
     const entries = await getTimeEntries();
     return NextResponse.json({ entries });
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('GET /api/time-entries error:', error.message);
     return NextResponse.json(
       { error: 'Failed to fetch time entries' },
       { status: 500 }
@@ -16,43 +16,20 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    console.log('=== API POST REQUEST RECEIVED ===');
-    
     const body = await request.json();
-    console.log('Request body:', body);
-    
-    // Check environment variables
-    console.log('Environment check:', {
-      hasAccessToken: !!process.env.AIRTABLE_ACCESS_TOKEN,
-      tokenLength: process.env.AIRTABLE_ACCESS_TOKEN?.length,
-      tokenPrefix: process.env.AIRTABLE_ACCESS_TOKEN?.substring(0, 10),
-      hasBaseId: !!process.env.AIRTABLE_BASE_ID,
-      baseIdLength: process.env.AIRTABLE_BASE_ID?.length,
-      baseIdPrefix: process.env.AIRTABLE_BASE_ID?.substring(0, 10),
-      tableName: process.env.AIRTABLE_TABLE_NAME || 'Time Entries',
-      defaultUserId: process.env.DEFAULT_USER_ID || 'andy'
-    });
-    
-    // Validate required fields
-    if (!body.date || !body.timeIn || !body.timeOut || !body.description) {
-      console.log('Missing required fields:', { body });
+
+    // Only date, timeIn, timeOut required — description is optional
+    if (!body.date || !body.timeIn || !body.timeOut) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Missing required fields: date, timeIn, timeOut' },
         { status: 400 }
       );
     }
 
-    console.log('Creating time entry with data:', body);
     const entry = await createTimeEntry(body);
-    console.log('Successfully created entry:', entry);
-    
     return NextResponse.json({ entry }, { status: 201 });
   } catch (error) {
-    console.error('API Error Details:', {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
+    console.error('POST /api/time-entries error:', error.message);
     return NextResponse.json(
       { error: 'Failed to create time entry', details: error.message },
       { status: 500 }
