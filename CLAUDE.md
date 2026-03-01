@@ -69,12 +69,15 @@ npm run lint    # Check for code issues
 AIRTABLE_ACCESS_TOKEN=your_token_here
 AIRTABLE_BASE_ID=your_base_id_here
 AIRTABLE_TABLE_NAME=your_table_id_here  # Use table ID (starts with 'tbl') NOT table name
-HOURLY_RATE=25
-BUSINESS_NAME=Your Business Name
-BUSINESS_EMAIL=your@email.com
-WORK_NAME=Client Company Name
-WORK_ADDRESS=Client Address
-WORK_EMAIL=client@email.com
+HOURLY_RATE=32.50
+BUSINESS_NAME=AK Capital Group LLC
+BUSINESS_EMAIL=andy@andykaufman.net
+BUSINESS_ADDRESS=100 Hainline Rd
+BUSINESS_CITY_STATE_ZIP=Aptos, CA 95003
+BUSINESS_PHONE=415.269.1034
+WORK_NAME=AirSpace Integration
+WORK_ADDRESS=681 Beach Dr., La Selva Beach, CA 95076
+WORK_EMAIL=bley@airspaceintegration.com
 RESEND_API_KEY=your_email_api_key
 ```
 
@@ -108,12 +111,14 @@ RESEND_API_KEY=your_email_api_key
 3. **Add specific base access** - select your exact base, not just general permissions
 4. Copy token (starts with `pat`) to `AIRTABLE_ACCESS_TOKEN`
 
-## Business Settings (To Configure)
-- Hourly rate: $XX/hour
-- Business name/personal name
-- Contact information for invoices
-- Chris's email address
-- Invoice template preferences
+## Business Settings
+- Hourly rate: $32.50/hour
+- Business: AK Capital Group LLC, 100 Hainline Rd, Aptos CA 95003
+- Contact: Andy Kaufman, 415.269.1034, andy@andykaufman.net
+- Client: AirSpace Integration, 681 Beach Dr., La Selva Beach CA 95076
+- Client contact: bley@airspaceintegration.com
+- Invoice numbering: YY-MM format (e.g., 26-01 for January 2026)
+- Invoice format: Simple summary (month, hours, rate, total) — NOT per-day breakdown
 
 ## Key Learning Concepts
 - **State Management**: How React keeps track of form data
